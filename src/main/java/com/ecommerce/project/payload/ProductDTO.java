@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDTO {
-
     private Long productId ;
     @NotBlank(message="Product name must not be empty")
     @Size(min=3, message="Product name must contain least 3 characters")

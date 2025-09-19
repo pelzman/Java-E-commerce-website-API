@@ -8,10 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.engine.internal.Cascade;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Data
@@ -32,51 +29,50 @@ public class User {
     private Long userId;
 
     @NotBlank
-    @Size(max=50)
-    @Email
+    @Size(max=30)
+    @Column(name="username")
+    private  String username ;
 
+    @NotBlank
     @Column(name="email")
+    @Email
     private  String email ;
+
     @NotBlank
     @Size(max=120)
-
     @Column(name="password")
     private  String  password;
-    @NotBlank
-    @Size(max=20)
 
-    @Column(name="username")
-    private  String userName ;
 
-    public User( String email, String password, String userName) {
-
+    public User( String username, String email, String password ) {
+        this.username = username;
         this.email = email;
         this.password = password;
-        this.userName = userName;
+
     }
 
     @Setter
     @Getter
+// IF YOU  WANT THE HIBERNATE TO HANDLE THE BIDIRECTIONAL RELATIONSHIP AUTOMATICALLY USE CASCADE TYPE.ALL
     @ToString.Exclude
-    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE} , fetch = FetchType.EAGER)
+    @ManyToMany(cascade={CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(
-            name ="user_role",
+            name ="user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
              inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
-
-
-
     @Setter
     @Getter
     @ToString.Exclude
-    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE} , fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name ="user_address",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "address_id")
     )
+
+
     private List<Address> addresses = new ArrayList<>();
 
     @ToString.Exclude
@@ -84,4 +80,33 @@ public class User {
             orphanRemoval = true
     )
     private Set<Product> products;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(userId, user.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(userId);
+    }
+
+    public void addRole(Role role){
+        this.roles.add(role);
+
+    }
+
+
+
+    // Safe toString without collections
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

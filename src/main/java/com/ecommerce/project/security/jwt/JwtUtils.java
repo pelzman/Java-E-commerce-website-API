@@ -1,6 +1,7 @@
 package com.ecommerce.project.security.jwt;
 
 
+import com.ecommerce.project.security.services.UserDetailsImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -40,7 +41,7 @@ public class JwtUtils {
         return null;
     }
     //Generating Token from username
-    public String generateJwtTokenFromUsername(UserDetails userDetails){
+    public String generateJwtTokenFromUsername(UserDetailsImpl userDetails){
         String userName = userDetails.getUsername();
         return Jwts.builder()
                 .setSubject(userName)
@@ -73,7 +74,7 @@ public class JwtUtils {
 
     public boolean validateJwtToken(String authToken){
         try {
-            System.out.println("validate");
+
             Jwts.parserBuilder()
                     .setSigningKey((SecretKey) key())
                     .build()

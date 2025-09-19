@@ -12,8 +12,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @Table(name="addresses")
 public class Address {
     @Id

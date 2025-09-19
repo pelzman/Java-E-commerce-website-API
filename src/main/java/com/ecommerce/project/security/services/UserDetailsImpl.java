@@ -1,5 +1,6 @@
 package com.ecommerce.project.security.services;
 
+import com.ecommerce.project.model.Role;
 import com.ecommerce.project.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -7,8 +8,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -16,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
-@Service
+
 public class UserDetailsImpl implements UserDetails {
     private  static final long serialVersionUUID = 1L;
     private Long id ;
@@ -27,7 +30,6 @@ public class UserDetailsImpl implements UserDetails {
     private String password;
 
     private Collection<? extends GrantedAuthority>authorities;
-
     public UserDetailsImpl(Long id, String username, String email, String password,
                            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
@@ -41,13 +43,15 @@ public class UserDetailsImpl implements UserDetails {
 
     public  static UserDetailsImpl build(User user){
         // getting the list of  authorities
+
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getRoleName().name()))
                 .collect(Collectors.toList());
+
         //constructing the userDetails object
        return new UserDetailsImpl(
                user.getUserId(),
-               user.getUserName(),
+               user.getUsername(),
                user.getEmail(),
                user.getPassword(),
                authorities
@@ -69,6 +73,7 @@ public class UserDetailsImpl implements UserDetails {
     public String getUsername() {
         return username;
     }
+
 
 
 @Override

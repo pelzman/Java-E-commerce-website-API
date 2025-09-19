@@ -1,5 +1,9 @@
 package com.ecommerce.project.security.jwt;
 
+import com.ecommerce.project.model.User;
+import com.ecommerce.project.repository.UserRepository;
+import com.ecommerce.project.security.services.UserDetailsImpl;
+import com.ecommerce.project.security.services.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,12 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 public class AuthTokenFilter  extends OncePerRequestFilter {
@@ -23,9 +28,13 @@ public class AuthTokenFilter  extends OncePerRequestFilter {
 
     @Autowired
    private  JwtUtils jwtUtils;
+    @Autowired
+    private UserRepository userRepository;
+
+
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
 
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
@@ -41,8 +50,14 @@ public class AuthTokenFilter  extends OncePerRequestFilter {
 
                 logger.debug("AuthFilter call for URI : {}", this.jwtUtils);
                 String userName = jwtUtils.getUsernameFromJwtToken(jwt);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+                User user = userRepository.findByUsername(userName)
+                        .orElseThrow(()->new RuntimeException("User not found"));
 
+
+
+                UserDetailsImpl userDetails = UserDetailsImpl.build(user);
+
+                System.out.println("Did userDetail build successfully ? :"  + userDetails);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
 
@@ -55,10 +70,6 @@ public class AuthTokenFilter  extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
                 logger.debug("Role from JWT : {}", userDetails.getAuthorities());
-
-
-
-
             }
 
         } catch(Exception e){
@@ -73,7 +84,7 @@ public class AuthTokenFilter  extends OncePerRequestFilter {
     }
 
     private String parseJwt(HttpServletRequest request) {
-        System.out.println(request.getHeader("Authorization"));
+
        String jwt = jwtUtils.getJwtFromHeader(request)  ;
 
        logger.debug("AuthFilter.java : {} ", jwt);

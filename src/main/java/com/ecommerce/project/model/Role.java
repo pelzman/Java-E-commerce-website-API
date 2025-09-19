@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -20,11 +21,12 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="role_id")
-    private Integer roleId;
+    private Long roleId;
 
     @Enumerated(EnumType.STRING)
     @Column(length=20 , name="role_name")
-    @ToString.Exclude
+
+  @ToString.Exclude
     private AppRole roleName;
 
 
@@ -32,6 +34,30 @@ public class Role {
         this.roleName = roleName;
     }
 
-     @ManyToMany(mappedBy = "roles")
+    @ToString.Exclude
+    @ManyToMany(  mappedBy = "roles", cascade = {CascadeType.MERGE})
     private Set<User> users = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Role role = (Role) o;
+        return Objects.equals(roleId, role.roleId);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(roleId, roleName);
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "roleId=" + roleId +
+                ", roleName=" + roleName +
+                '}';
+    }
+
+
 }

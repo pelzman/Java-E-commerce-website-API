@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+
 @Table(name="products")
 @ToString
 public class Product {

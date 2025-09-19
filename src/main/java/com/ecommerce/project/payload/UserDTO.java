@@ -18,7 +18,11 @@ public class UserDTO {
     private Long userId;
 
     @NotBlank
-    @Size(max=50, message=" Email must be atmost 50 characters")
+    @Size(max=20, message=" Username must be at most 20 characters")
+    private  String username ;
+
+    @NotBlank
+    @Size(max=50, message=" Email must be at most 50 characters")
     @Email
     private  String email ;
 
@@ -26,8 +30,6 @@ public class UserDTO {
     @NotBlank
     @Size(max=120, message=" Password must be atmost 120 characters")
     private  String  password;
-    @NotBlank
-    @Size(max=20, message=" Username must be atmost 20 characters")
-    private  String userName ;
+
 
 }

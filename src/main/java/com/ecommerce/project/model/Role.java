@@ -35,7 +35,7 @@ public class Role {
     }
 
     @ToString.Exclude
-    @ManyToMany(  mappedBy = "roles", cascade = {CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles", cascade = {CascadeType.MERGE})
     private Set<User> users = new HashSet<>();
 
     @Override

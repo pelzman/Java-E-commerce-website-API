@@ -67,8 +67,8 @@ public class DataInitialization {
             Set<Role>managedRole = roleRepository.findAllById(roleIds)
                     .stream().collect(Collectors.toSet());
             User user = new User(username, email, encoder.encode(password));
-            user.setRoles(managedRole);
-//            managedRole.forEach(user::addRole);
+//            user.setRoles(managedRole);
+            managedRole.forEach(user::addRole);
             userRepository.save(user);
         }
     }

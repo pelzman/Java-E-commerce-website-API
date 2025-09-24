@@ -5,16 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoResponse {
+public class LoginUserResponse {
     private Long id;
     private String username ;
-
+    private String token;
     private List<String> roles;
-
 }
-

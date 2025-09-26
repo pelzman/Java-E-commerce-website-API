@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Table(name = "category")
 @ToString
 public class Category {
     @Id

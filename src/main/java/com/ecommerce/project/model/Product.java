@@ -6,6 +6,9 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -39,6 +42,9 @@ public class Product {
     @JoinColumn(name="seller_id")
     private User user;
 
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    private List<CartItem> products = new ArrayList<>();
+
     public Product(String productName, String description, String image, Integer quantity, Double price, Double discount, Double specialPrice, Category category) {
         this.productName = productName;
         this.description = description;
@@ -49,4 +55,5 @@ public class Product {
         this.specialPrice = specialPrice;
         this.category = category;
     }
+
 }

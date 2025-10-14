@@ -80,7 +80,7 @@ public class AuthController {
                     userDetails.getId(), userDetails.getUsername(),jwtCookie.toString(), roles
             );
 
-            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString().split(";"))
+            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                     .body(response);
 
         }
@@ -183,7 +183,7 @@ public class AuthController {
     @PostMapping("/signout")
     public ResponseEntity<?>signoutUser(){
        ResponseCookie cookie = jwtUtils.generateCleanCookie();
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString().split(";"))
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(new MessageResponse("You've been signed out successfully!"));
     }
 }

@@ -16,15 +16,15 @@ import java.util.List;
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cart_id;
+    private Long cartId;
     private Double totalPrice = 0.0;
 
     @OneToOne
     @JoinColumn(name="user_id")
     private User user;
 
-    @OneToMany(mappedBy = "cart", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
-    private List<CartItem> carts = new ArrayList<>();
+    @OneToMany(mappedBy = "cart", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<CartItem> cartItems = new ArrayList<>();
 
 
 }
